@@ -1,11 +1,12 @@
+import sqlite3
 import customtkinter as ctk
 
 class PatientMainView(ctk.CTk):
-    def __init__(self, patient_id, patient_name="Mario Rossi", questionnaire_done=False):
+    def __init__(self, patient_id, questionnaire_done=False):
         super().__init__()
 
         self.patient_id = patient_id
-        self.patient_name = patient_name
+        self.patient_name = self.get_patient_name(patient_id)
         self.questionnaire_done = questionnaire_done
 
         self.title(f"Patient Dashboard - {self.patient_name}")
@@ -41,7 +42,12 @@ class PatientMainView(ctk.CTk):
         for widget in self.main_frame.winfo_children():
             widget.destroy()
 
-        title = ctk.CTkLabel(self.main_frame, text="Welcome to your Patient Portal", font=("Arial", 18, "bold"))
+        title = ctk.CTkLabel(
+            self.main_frame,
+            text="Welcome to your Patient Portal",
+            font=("Arial", 22, "bold"),
+            text_color="#204080" 
+            )
         title.pack(pady=20)
 
         # Buttons area
@@ -63,7 +69,12 @@ class PatientMainView(ctk.CTk):
     def show_visual_data(self):
         for widget in self.main_frame.winfo_children():
             widget.destroy()
-        title = ctk.CTkLabel(self.main_frame, text="Visual Data (coming soon)", font=("Arial", 16))
+        title = ctk.CTkLabel(
+            self.main_frame, text="Visual Data (coming soon)",             
+            font=("Arial", 22, "bold"),
+            text_color="#204080" 
+            
+            )
         title.pack(pady=20)
 
     def open_questionnaire(self):
@@ -75,6 +86,18 @@ class PatientMainView(ctk.CTk):
     def open_medication(self):
         print("Open Medication window")  # da collegare
 
+    def get_patient_name(self, patient_id):
+        conn = sqlite3.connect("Database_proj.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT Name, Surname FROM Patients WHERE PatientID = ?", (patient_id,))
+        result = cursor.fetchone()
+        conn.close()
+
+        if result:
+            return f"{result[0]} {result[1]}"
+        else:
+            return "Unknown Patient"
+
 # Test locale
 if __name__ == "__main__":
-    PatientMainView(patient_id="PAT001", patient_name="Luca Bianchi", questionnaire_done=True)
+    PatientMainView(patient_id="PAT001", questionnaire_done=True)
