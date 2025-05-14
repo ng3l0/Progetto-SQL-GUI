@@ -4,7 +4,7 @@ Vanno controllate le foreign key e le relazioni
 per garantire il corretto funzionamento del sistema.
 """
 # PATIENTS
-c.execute("""
+c.("""
 CREATE TABLE IF NOT EXISTS Patients (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS Patients (
 """)
 
 # USER
-c.execute("""
+c.("""
 CREATE TABLE IF NOT EXISTS User (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     AppID TEXT NOT NULL,
