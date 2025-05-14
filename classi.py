@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS User (
 """)
 
 # DOCTOR
-c.("""
+c.execute("""
 CREATE TABLE IF NOT EXISTS Doctor (
     doctorID TEXT PRIMARY KEY NOT NULL,
     Name TEXT NOT NULL,
