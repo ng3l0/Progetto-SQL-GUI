@@ -3,6 +3,7 @@ Database relativo alle classi.
 Vanno controllate le foreign key e le relazioni
 per garantire il corretto funzionamento del sistema.
 """
+
 # PATIENTS
 c.("""
 CREATE TABLE IF NOT EXISTS Patients (
