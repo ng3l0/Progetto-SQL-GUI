@@ -174,7 +174,8 @@ CREATE TABLE IF NOT EXISTS Indexes (
     Date DATE,
     ValueAHI REAL,
     ValueODI REAL,
-    ValueSpO2 REAL,
+    MeanSpO2 REAL,
+    MinSpO2 REAL,
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID)
 );
 """)
