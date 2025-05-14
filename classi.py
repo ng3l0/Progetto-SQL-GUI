@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS User (
 # DOCTOR
 c.execute("""
 CREATE TABLE IF NOT EXISTS Doctor (
-    doctorID TEXT PRIMARY KEY,
+    doctorID TEXT PRIMARY KEY NOT NULL,
     Name TEXT NOT NULL,
     Surname TEXT NOT NULL,
     dateOfBirth DATE,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS App (
 # TECHNICIAN
 c.execute("""
 CREATE TABLE IF NOT EXISTS Technicians (
-    TechnicianID TEXT PRIMARY KEY,
+    TechnicianID TEXT PRIMARY KEY AUTOINCREMENT,
     AppCredential TEXT NOT NULL,
     PhoneNumber TEXT NOT NULL
 );
@@ -144,6 +144,7 @@ c.execute("""
 CREATE TABLE IF NOT EXISTS Question (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     PatientID TEXT NOT NULL,
+    Date DATE,
     QuestionNumber TEXT NOT NULL,
     QuestionText TEXT,
     Value INTEGER,
@@ -169,13 +170,11 @@ CREATE TABLE IF NOT EXISTS Visit (
 c.execute("""
 CREATE TABLE IF NOT EXISTS Indexes (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    IndexName TEXT,
     PatientID TEXT NOT NULL,
     Date DATE,
-    Value REAL,
+    ValueAHI REAL,
+    ValueODI REAL,
+    ValueSpO2 REAL,
     FOREIGN KEY (PatientID) REFERENCES Patients(PatientID)
 );
 """)
-
-conn.commit()
-conn.close()
