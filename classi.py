@@ -5,7 +5,7 @@ per garantire il corretto funzionamento del sistema.
 """
 
 # PATIENTS
-c.execute("""
+c.("""
 CREATE TABLE IF NOT EXISTS Patients (
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     Name TEXT NOT NULL,
