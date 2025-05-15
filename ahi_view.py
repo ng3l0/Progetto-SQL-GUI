@@ -2,6 +2,12 @@ import sqlite3
 import datetime
 import customtkinter as ctk
 
+# matplotlib
+import matplotlib
+matplotlib.use("TkAgg")  # Use TkAgg backend for matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+
 class AHIView(ctk.CTk):
     def __init__(self, patient_id, patient_name="Unknown Patient"):
         super().__init__()
@@ -54,7 +60,8 @@ class AHIView(ctk.CTk):
         data = self.get_indexes_data()
         last_night_value = data[0][1] if data else "N/A"
 
-        today = datetime.date.today()
+        #today = datetime.date.today() se voglio la data di oggi dal pc
+        today = datetime.date(2025, 4, 21)  # finto oggi
         seven_days_ago = today - datetime.timedelta(days=7)
         seven_days_data = [value for date_str, value in data if datetime.date.fromisoformat(date_str) >= seven_days_ago]
         seven_days_mean = round(sum(seven_days_data) / len(seven_days_data), 2) if seven_days_data else "N/A"
@@ -63,10 +70,29 @@ class AHIView(ctk.CTk):
         ctk.CTkLabel(self.main_frame, text=f"Last Night Value: {last_night_value}", font=("Arial", 16)).pack(pady=10)
         ctk.CTkLabel(self.main_frame, text=f"7 Days Mean: {seven_days_mean}", font=("Arial", 16)).pack(pady=10)
 
-        plot_frame = ctk.CTkFrame(self.main_frame, height=200, width=500, fg_color="white")
+        plot_frame = ctk.CTkFrame(self.main_frame, height=300, width=700, fg_color="white")
         plot_frame.pack(pady=20)
-        ctk.CTkLabel(plot_frame, text="[Plot Placeholder - Coming Soon]", font=("Arial", 12, "italic"), text_color="gray").pack(pady=80)
 
+        # estraiamo dati
+        data = self.get_indexes_data()
+        dates = [datetime.datetime.strptime(date_str, "%Y-%m-%d").date() for date_str, value in data]
+        values = [value for date_str, value in data]
+
+        # creiamo figura
+        fig, ax = plt.subplots(figsize=(7, 3))
+        ax.plot(dates, values, marker="o", color="#3366cc")
+        ax.set_title("AHI values over time")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("AHI value")
+        ax.grid(True)
+        fig.autofmt_xdate()
+
+        # inseriamo nel frame
+        canvas = FigureCanvasTkAgg(fig, master=plot_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill="both", expand=True)
+
+        
     def go_home(self):
         from patient_main_view import PatientMainView
         self.destroy()
