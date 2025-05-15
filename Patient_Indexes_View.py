@@ -48,7 +48,7 @@ class PatientIndexes(ctk.CTk):
         ctk.CTkButton(self.main_frame, text="SpO2", width=200, fg_color="#a8d5ba", command=self.open_spo2).pack(pady=15)
 
     def go_home(self):
-        from GUI_Paziente import PatientMainView  # attenzione al nome file!
+        from patient_main_view import PatientMainView  # attenzione al nome file!
         self.destroy()
         PatientMainView(patient_id=self.patient_id)
 

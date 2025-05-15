@@ -125,7 +125,7 @@ class PatientMainView(ctk.CTk):
         ctk.CTkButton(self.main_frame, text="Medication", width=250, command=self.open_medication).pack(pady=15)
 
     def go_to_indexes(self):
-        from Patient_Indexes_View import PatientIndexes  # attenzione al nome file!
+        from patient_indexes_view import PatientIndexes  # attenzione al nome file!
         self.destroy()
         PatientIndexes(patient_id=self.patient_id, patient_name=self.patient_name)
 
