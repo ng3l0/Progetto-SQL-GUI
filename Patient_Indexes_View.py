@@ -53,7 +53,9 @@ class PatientIndexes(ctk.CTk):
         PatientMainView(patient_id=self.patient_id)
 
     def open_ahi(self):
-        print("AHI")
+        from ahi_view import AHIView
+        self.destroy()
+        AHIView(patient_id=self.patient_id, patient_name=self.patient_name)
 
     def open_odi(self):
         print("ODI")
