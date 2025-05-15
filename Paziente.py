@@ -7,7 +7,7 @@ class PatientMainView(ctk.CTk):
 
         self.patient_id = patient_id
         self.patient_name = self.get_patient_name(patient_id)
-        self.initialize_questionnaire_table = self.initialize_questionnaire_table(self)
+        self.initialize_questionnaire_table()
 
         self.title(f"Patient Dashboard - {self.patient_name}")
         self.geometry("800x500")
@@ -70,7 +70,19 @@ class PatientMainView(ctk.CTk):
 
         self.questionnaire_done = bool(new_status)
         self.show_home()  # per aggiornare la UI
+        if new_status == 1:
+        # Dopo 2 secondi (2000 ms), resetta
+            self.after(2000, self.reset_questionnaire_status)
 
+    def reset_questionnaire_status(self):
+        conn = sqlite3.connect("Database_proj.db")
+        cursor = conn.cursor()
+        cursor.execute("UPDATE QuestionnaireStatus SET Done = 0 WHERE PatientID = ?", (self.patient_id,))
+        conn.commit()
+        conn.close()
+
+        self.questionnaire_done = False
+        self.show_home()  # aggiorna la UI
 
 
     #def is_questionnaire_done(self, patient_id):
@@ -98,9 +110,16 @@ class PatientMainView(ctk.CTk):
         # Buttons area
         questionnaire_text = "Questionnaire" + (" ✔️" if self.questionnaire_done else "")
         questionnaire_color = "green" if self.questionnaire_done else "blue"
+        questionnaire_state = "normal"
 
-        self.questionnaire_button = ctk.CTkButton(self.main_frame, text=questionnaire_text, width=250,
-                                                  command=self.open_questionnaire, state=questionnaire_state)
+        self.questionnaire_button = ctk.CTkButton(
+            self.main_frame,
+            text=questionnaire_text,
+            fg_color=questionnaire_color,
+            width=250,
+            command=self.toggle_questionnaire_status,  # <-- assicurati che punti qui
+            state=questionnaire_state
+        )
         self.questionnaire_button.pack(pady=15)
 
         self.visits_button = ctk.CTkButton(self.main_frame, text="Visits", width=250,
