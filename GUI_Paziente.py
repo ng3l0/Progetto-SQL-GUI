@@ -1,22 +1,21 @@
+# patient_main_view.py
 import sqlite3
 import customtkinter as ctk
 
 class PatientMainView(ctk.CTk):
     def __init__(self, patient_id, questionnaire_done=False):
         super().__init__()
-
         self.patient_id = patient_id
         self.patient_name = self.get_patient_name(patient_id)
         self.questionnaire_done = questionnaire_done
 
         self.title(f"Patient Dashboard - {self.patient_name}")
         self.geometry("800x500")
+        self.center_window()
 
-        # layout
         self.grid_rowconfigure(0, weight=1)
         self.grid_columnconfigure(1, weight=1)
 
-        # ----- Sidebar -----
         self.sidebar_frame = ctk.CTkFrame(self, corner_radius=0)
         self.sidebar_frame.grid(row=0, column=0, sticky="nsw")
         self.sidebar_frame.grid_rowconfigure(4, weight=1)
@@ -27,10 +26,9 @@ class PatientMainView(ctk.CTk):
         self.home_button = ctk.CTkButton(self.sidebar_frame, text="Home", command=self.show_home, width=140)
         self.home_button.grid(row=1, column=0, padx=10, pady=10)
 
-        self.visual_data_button = ctk.CTkButton(self.sidebar_frame, text="Visual Data", command=self.show_visual_data, width=140)
+        self.visual_data_button = ctk.CTkButton(self.sidebar_frame, text="Visual Data", command=self.go_to_indexes, width=140)
         self.visual_data_button.grid(row=2, column=0, padx=10, pady=10)
 
-        # ----- Main content -----
         self.main_frame = ctk.CTkFrame(self, corner_radius=10, fg_color="#e6f0ff")
         self.main_frame.grid(row=0, column=1, sticky="nsew", padx=20, pady=20)
 
@@ -38,53 +36,40 @@ class PatientMainView(ctk.CTk):
 
         self.mainloop()
 
+    def center_window(self):
+        w = 800
+        h = 500
+        x = (self.winfo_screenwidth() // 2) - (w // 2)
+        y = (self.winfo_screenheight() // 2) - (h // 2)
+        self.geometry(f"{w}x{h}+{x}+{y}")
+
     def show_home(self):
         for widget in self.main_frame.winfo_children():
             widget.destroy()
 
-        title = ctk.CTkLabel(
-            self.main_frame,
-            text="Welcome to your Patient Portal",
-            font=("Arial", 22, "bold"),
-            text_color="#204080" 
-            )
+        title = ctk.CTkLabel(self.main_frame, text="Welcome to your Patient Portal", font=("Arial", 22, "bold"), text_color="#204080")
         title.pack(pady=20)
 
-        # Buttons area
         questionnaire_state = "disabled" if self.questionnaire_done else "normal"
         questionnaire_text = "Questionnaire" + (" ✔️" if self.questionnaire_done else "")
 
-        self.questionnaire_button = ctk.CTkButton(self.main_frame, text=questionnaire_text, width=250,
-                                                  command=self.open_questionnaire, state=questionnaire_state)
-        self.questionnaire_button.pack(pady=15)
+        ctk.CTkButton(self.main_frame, text=questionnaire_text, width=250, command=self.open_questionnaire, state=questionnaire_state).pack(pady=15)
+        ctk.CTkButton(self.main_frame, text="Visits", width=250, command=self.open_visits).pack(pady=15)
+        ctk.CTkButton(self.main_frame, text="Medication", width=250, command=self.open_medication).pack(pady=15)
 
-        self.visits_button = ctk.CTkButton(self.main_frame, text="Visits", width=250,
-                                           command=self.open_visits)
-        self.visits_button.pack(pady=15)
-
-        self.medication_button = ctk.CTkButton(self.main_frame, text="Medication", width=250,
-                                               command=self.open_medication)
-        self.medication_button.pack(pady=15)
-
-    def show_visual_data(self):
-        for widget in self.main_frame.winfo_children():
-            widget.destroy()
-        title = ctk.CTkLabel(
-            self.main_frame, text="Visual Data (coming soon)",             
-            font=("Arial", 22, "bold"),
-            text_color="#204080" 
-            
-            )
-        title.pack(pady=20)
+    def go_to_indexes(self):
+        from Patient_Indexes_View import PatientIndexes  # attenzione al nome file!
+        self.destroy()
+        PatientIndexes(patient_id=self.patient_id, patient_name=self.patient_name)
 
     def open_questionnaire(self):
-        print("Open Questionnaire window")  # da collegare
+        print("Open Questionnaire")
 
     def open_visits(self):
-        print("Open Visits window")  # da collegare
+        print("Open Visits")
 
     def open_medication(self):
-        print("Open Medication window")  # da collegare
+        print("Open Medication")
 
     def get_patient_name(self, patient_id):
         conn = sqlite3.connect("Database_proj.db")
@@ -92,12 +77,7 @@ class PatientMainView(ctk.CTk):
         cursor.execute("SELECT Name, Surname FROM Patients WHERE PatientID = ?", (patient_id,))
         result = cursor.fetchone()
         conn.close()
+        return f"{result[0]} {result[1]}" if result else "Unknown Patient"
 
-        if result:
-            return f"{result[0]} {result[1]}"
-        else:
-            return "Unknown Patient"
-
-# Test locale
 if __name__ == "__main__":
     PatientMainView(patient_id="PAT001", questionnaire_done=True)
