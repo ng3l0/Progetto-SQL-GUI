@@ -122,6 +122,8 @@ class PatientMainView(ctk.CTk):
         self.questionnaire_button.pack(pady=15)
 
         ctk.CTkButton(self.main_frame, text="Visits", width=250, command=self.open_visits).pack(pady=15)
+
+
         ctk.CTkButton(self.main_frame, text="Medication", width=250, command=self.open_medication).pack(pady=15)
 
     def go_to_indexes(self):
@@ -133,7 +135,10 @@ class PatientMainView(ctk.CTk):
         print("Open Questionnaire")
 
     def open_visits(self):
-        print("Open Visits")
+        #print("Open Visits")
+        from visit2 import VisitView  # attenzione al nome file!
+        self.destroy()
+        VisitView(patient_id=self.patient_id, patient_name=self.patient_name)
 
     def open_medication(self):
         print("Open Medication")
