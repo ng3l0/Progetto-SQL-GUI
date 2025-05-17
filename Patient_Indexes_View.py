@@ -58,9 +58,15 @@ class PatientIndexes(ctk.CTk):
         AHIView(patient_id=self.patient_id, patient_name=self.patient_name)
 
     def open_odi(self):
+        from odi_view import ODIView
+        self.destroy()
+        ODIView(patient_id=self.patient_id, patient_name=self.patient_name)
         print("ODI")
 
     def open_spo2(self):
+        from spo2_view import SpO2View
+        self.destroy()
+        SpO2View(patient_id=self.patient_id, patient_name=self.patient_name)
         print("SpO2")
 
 if __name__ == "__main__":
