@@ -2,12 +2,10 @@ import customtkinter as ctk
 import sqlite3
 import os
 from PIL import Image
-from DoctorHomeView import DoctorMainView
 import tkinter.ttk as ttk
 
 class AppProg:
     def __init__(self):
-        super().__init__()
         self.user = ""
         self.conn = sqlite3.connect("Database_proj.db")
         self.cursor = self.conn.cursor()
@@ -45,6 +43,17 @@ class AppProg:
         self.message_label = ctk.CTkLabel(self.login_frame, text="", font=("Arial", 12))
         self.message_label.pack(pady=(10, 0))
 
+    def go_to_home_doctor(self):
+            from doctor_main_view import DoctorMainView
+            self.login_frame.destroy()
+            DoctorMainView(self, self.user_id)
+
+    def go_to_home_patient(self):
+            from patient_main_view import PatientMainView
+            self.login_frame.destroy()
+            PatientMainView(self, self.user_id)
+
+
     def login(self):
        user_id = self.email_entry.get()             # Legge l'ID inserito
        password = self.password_entry.get()         # Legge la password
@@ -61,8 +70,10 @@ class AppProg:
             if result:
                 self.message_label.configure(text="Doctor login successful", text_color="green")
                 self.root.destroy()  # Close the login window
-                doctor_dashboard = DoctorMainView(user_id)  # Create and show the doctor dashboard
-                doctor_dashboard.mainloop()
+                #doctor_dashboard = DoctorMainView(user_id)  # Create and show the doctor dashboard
+                #doctor_dashboard.mainloop()
+                self.root.destroy()
+                self.go_to_home_doctor()
             else:
                 self.message_label.configure(text="Invalid doctor credentials", text_color="red")
 
@@ -76,15 +87,12 @@ class AppProg:
 
             if result:
                 self.message_label.configure(text="Patient login successful", text_color="green")
-                self.root.destroy()  # Close the login window
-                # TODO: Add patient dashboard here when implemented
+                self.root.destroy()  # Close the login window                
+                self.go_to_home_patient  # Create and show the doctor dashboard
+
             else:
                 self.message_label.configure(text="Invalid patient credentials", text_color="red")
-    
-    def go_to_home_doctor(self):
-            from DoctorHomeView import DoctorMainView
-            self.login_frame.destroy()
-            DoctorMainView(self, self.user_id)
+
 
 AppProg()
 
