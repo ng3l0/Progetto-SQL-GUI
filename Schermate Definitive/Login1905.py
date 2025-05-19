@@ -3,6 +3,12 @@ import sqlite3
 import os
 from PIL import Image
 import tkinter.ttk as ttk
+import sys
+
+# Aggiungo il percorso della directory corrente al PYTHONPATH
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
 
 class AppProg:
     def __init__(self):
@@ -60,9 +66,11 @@ class AppProg:
             from doctor_main_view import DoctorMainView
             # Create new window before destroying the old one
             doctor_window = DoctorMainView(self.user_id)
-            self.root.withdraw()  # Hide the login window instead of destroying it
             doctor_window.protocol("WM_DELETE_WINDOW", lambda: self.on_closing(doctor_window))
+            self.root.withdraw()  # Hide the login window
             doctor_window.mainloop()
+            # When doctor window is closed, show login window again
+            self.root.deiconify()
         except Exception as e:
             self.message_label.configure(text=f"Error loading doctor interface: {str(e)}", text_color="red")
             self.root.deiconify()  # Show the login window again if there's an error
@@ -72,9 +80,11 @@ class AppProg:
             from patient_main_view import PatientMainView
             # Create new window before destroying the old one
             patient_window = PatientMainView(self.user_id)
-            self.root.withdraw()  # Hide the login window instead of destroying it
             patient_window.protocol("WM_DELETE_WINDOW", lambda: self.on_closing(patient_window))
+            self.root.withdraw()  # Hide the login window
             patient_window.mainloop()
+            # When patient window is closed, show login window again
+            self.root.deiconify()
         except Exception as e:
             self.message_label.configure(text=f"Error loading patient interface: {str(e)}", text_color="red")
             self.root.deiconify()  # Show the login window again if there's an error
