@@ -44,14 +44,14 @@ class AppProg:
         self.message_label.pack(pady=(10, 0))
 
     def go_to_home_doctor(self):
-            from doctor_main_view import DoctorMainView
-            self.login_frame.destroy()
-            DoctorMainView(self, self.user_id)
+        from doctor_main_view import DoctorMainView
+        self.root.destroy()  # sposta qui la distruzione
+        DoctorMainView(self, self.user_id)
 
     def go_to_home_patient(self):
-            from patient_main_view import PatientMainView
-            self.login_frame.destroy()
-            PatientMainView(self, self.user_id)
+        from patient_main_view import PatientMainView
+        self.root.destroy()
+        PatientMainView(self, self.user_id)
 
 
     def login(self):
@@ -68,11 +68,8 @@ class AppProg:
             result = self.cursor.fetchone()
             
             if result:
+                self.user_id = user_id
                 self.message_label.configure(text="Doctor login successful", text_color="green")
-                self.root.destroy()  # Close the login window
-                #doctor_dashboard = DoctorMainView(user_id)  # Create and show the doctor dashboard
-                #doctor_dashboard.mainloop()
-                self.root.destroy()
                 self.go_to_home_doctor()
             else:
                 self.message_label.configure(text="Invalid doctor credentials", text_color="red")
@@ -86,9 +83,9 @@ class AppProg:
             result = self.cursor.fetchone()
 
             if result:
+                self.user_id = user_id
                 self.message_label.configure(text="Patient login successful", text_color="green")
-                self.root.destroy()  # Close the login window                
-                self.go_to_home_patient  # Create and show the doctor dashboard
+                self.go_to_home_patient()  # Create and show the patient dashboard
 
             else:
                 self.message_label.configure(text="Invalid patient credentials", text_color="red")
