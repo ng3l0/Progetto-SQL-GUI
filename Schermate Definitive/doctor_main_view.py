@@ -8,7 +8,6 @@ from OSA_Patients import OSAPatientsView
 
 class DoctorMainView(customtkinter.CTk):
     def __init__(self, user_id):
-        super().__init__()
         
         self.user_id = user_id
         self.doctor_name = self.get_doctor_name(user_id)

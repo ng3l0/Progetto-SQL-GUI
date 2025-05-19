@@ -3,6 +3,8 @@ import sqlite3
 import os
 from PIL import Image
 import tkinter.ttk as ttk
+from patient_main_view import PatientMainView
+from doctor_main_view import DoctorMainView
 
 class AppProg:
     def __init__(self):
